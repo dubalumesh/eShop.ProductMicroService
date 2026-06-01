@@ -1,0 +1,32 @@
+
+name: eshop
+
+services:
+  products-microservice:
+    image: dubalumesh/eshop.product-microservice:v1.0
+    environment:
+      SQL_DB: eShopProductDB
+      SQL_PASSWORD: admiN@123
+      SQL_SERVER_HOST: products-DB
+      SQL_USER: sa
+    ports:
+      - "7222:8080"
+      - "7223:8081"
+    depends_on:
+      - products-DB
+  products-DB:
+    image: mcr.microsoft.com/mssql/server:2022-latest    
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=admiN@123  # Must meet complexity requirements       
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    restart: unless-stopped
+    
+
+volumes:
+  mssql-data:
+    name: eshop_mssql-data
+  
